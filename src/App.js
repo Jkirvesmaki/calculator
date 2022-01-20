@@ -3,7 +3,7 @@ import { useState } from 'react';
 function App() {
 const [calc, setCalc] = useState('');
 const [result, setResult] = useState('');
-
+const [history, setHistory] = useState([]);
 const ops = ['/', '*', '+', '-', '.'];
 
 const updateCalc = value => {
@@ -39,6 +39,7 @@ const updateCalc = value => {
 
   const calculate = () => {
       setCalc(eval(calc).toString());
+      historySet(calc)
   }
 
   const deleteLast = () => {
@@ -55,8 +56,27 @@ const updateCalc = value => {
 		setCalc('');
     setResult('')
 	}
+  const historySet = (calc) => {
+if (history.length <= 10) {
+  setHistory(history => [... history, calc]);
+  
+  console.log('result', result)
+}
+else {
+  history.shift();
+  setHistory(history => [... history, calc]);
+ 
+}
+  console.log('hist', history);
+  
+ }
+ const clickHistory = (h) => {
+   setCalc(h)
+   setResult(eval(h).toString());
+ }
 
   return (
+    <div className='container'>
     <div className="App">
         <div className="calculator">
           <div className="display">
@@ -81,6 +101,17 @@ const updateCalc = value => {
           <button onClick={calculate}>=</button>
           
         </div>
+    </div>
+    </div>
+    <div className='history'>
+      <div className='historyTable'>
+        {history.map (h =>
+          <div>
+            <button className='button2' onClick={() => clickHistory(h)}>{h}</button>
+          </div>
+          )
+        }
+      </div>
     </div>
     </div>
   );
